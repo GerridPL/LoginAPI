@@ -23,12 +23,20 @@ class AuthController extends Controller
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
+        $user->sendEmailVerificationNotification();
+
         $response = [
             'user' => $user,
             'token' => $token
         ];
 
         return response($response, 201);
+    }
+
+    public function test(){
+        if (auth()->user()->hasVerifiedEmail()) {
+            return response()->json(["msg" => "Email already verified."], 400);
+        }
     }
 
     public function logout(Request $request) {
